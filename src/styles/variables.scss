@@ -1,0 +1,18 @@
+// colors
+$main_dark_gray: #191A20;
+$main_light_grey: #757679;
+$main_red: #A12C2C;
+$main_green: #2CA15B;
+$gradient_1: linear-gradient(90deg, rgba(31, 70, 106, 0.88) 14.34%, rgba(255, 255, 255, 0) 161.93%), #FFFFFF;;
+$gradient_2: linear-gradient(90deg, rgba(31, 70, 106, 0.88) 0%, #191A20 138.3%), #191A20;;
+
+
+// margins
+$app_gap: 10px;
+
+// height
+$header_height: 5.5vh;
+$main_heigth: calc(100vh - #{$header_height} - #{$app_gap});
+
+// width
+$quotes_width: 27vw;
