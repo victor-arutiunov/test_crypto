@@ -1,20 +1,20 @@
 <template>
   <Header />
   <Quotes />
-  <Diagram />
+  <Diagram_panel />
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import Quotes from './components/Quotes.vue'
-import Diagram from './components/Diagram.vue'
+import Diagram_panel from './components/Diagram_panel.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     Quotes,
-    Diagram,
+    Diagram_panel,
   },
   data: () => ({
 

@@ -6,19 +6,19 @@
 
     <div class="quotes__currency">
       <div class="quotes__labels">
-        <h3 class="quotes__labels__label">Валютные пары</h3>
-        <h3 class="quotes__labels__label">Изменения</h3>
-        <h3 class="quotes__labels__label">Цена</h3>
+        <h3 class="quotes__label">Валютные пары</h3>
+        <h3 class="quotes__label">Изменения</h3>
+        <h3 class="quotes__label">Цена</h3>
       </div>
 
       <ul class="quotes__list">
-        <li class="quotes__list__item">
+        <li class="quotes__item">
           <h2>USD</h2> <h2>%</h2> <h2>price</h2>
         </li>
-        <li class="quotes__list__item">
+        <li class="quotes__item">
           <h2>BCH</h2> <h2>%</h2> <h2>price</h2>
         </li>
-        <li class="quotes__list__item">
+        <li class="quotes__item">
           <h2>XRP</h2> <h2>%</h2> <h2>price</h2>
         </li>
       </ul>
@@ -63,21 +63,21 @@ export default {
       padding-bottom: 5px;
       display: flex;
       justify-content: space-between;
-      &__label {
-        @include h2;
-        font-size: 12px;
-        color: $main_light_grey;
-      }
+    }
+    &__label {
+      @include h2;
+      font-size: 12px;
+      color: $main_light_grey;
     }
     &__list {
-      &__item {
-        @include h3;
-        display: flex;
-        justify-content: space-between;
-        margin-left: -40px;
-        font-size: 20px;
-        color: #fff;
-      }
+    }
+    &__item {
+      @include h3;
+      display: flex;
+      justify-content: space-between;
+      margin-left: -40px;
+      font-size: 20px;
+      color: #fff;
     }
   }
 </style>
