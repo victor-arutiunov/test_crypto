@@ -7,12 +7,28 @@ $gradient_1: linear-gradient(90deg, rgba(31, 70, 106, 0.88) 14.34%, rgba(255, 25
 $gradient_2: linear-gradient(90deg, rgba(31, 70, 106, 0.88) 0%, #191A20 138.3%), #191A20;;
 
 
+@function calculateHeight($element, $monitor_height) {
+  @return $element * 100 / $monitor_height;
+}
+
+
 // margins
 $app_gap: 10px;
 
 // height
-$header_height: 5.5vh;
-$main_heigth: calc(100vh - #{$header_height} - #{$app_gap});
 
 // width
 $quotes_width: 27vw;
+
+
+// desktop sizes
+$header_height: #{calculateHeight(60, 1080)} + 'vh';
+$title_panel_height: #{calculateHeight(80, 1080)} + 'vh';
+$currency_bar_height: #{calculateHeight(927, 1080)} + 'vh';
+$chart_panel_height: #{calculateHeight(1010, 1080)} + 'vh';
+
+// portable sizes
+$header_heigth_portable: #{calculateHeight(30, 640)} + 'vh';
+$title_panel_height_portable: #{calculateHeight(25, 640)} + 'vh';
+$currency_bar_height_portable: #{calculateHeight(311, 640)} + 'vh';
+$chart_panel_height_portable: #{calculateHeight(269, 640)} + 'vh';

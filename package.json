@@ -11,6 +11,7 @@
     "apexcharts": "^3.27.1",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
+    "vue-socket.io": "^3.0.10",
     "vue3-apexcharts": "^1.4.0"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
+    "fake-web-socket-server": "1.1.2",
     "sass": "^1.34.1",
     "sass-loader": "^10.2.0"
   },

@@ -1,26 +1,172 @@
 <template>
   <Header />
-  <Quotes />
-  <Diagram_panel />
+  <Quotes
+    :price="price"
+    :getprice="getprice"
+    :connectToWebSocket="connectToWebSocket"
+    :currencyPairs="currencyPairs"
+    :setSelectedPair="setSelectedPair"
+    />
+  <Chart_panel
+    :price="price"
+    :tradeTime="tradeTime"
+    :selectedPair="selectedPair"
+    />
+  <!-- <button class="b1" v-on:click="closeSockets()">Close websockets!!!</button> -->
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import Quotes from './components/Quotes.vue'
-import Diagram_panel from './components/Diagram_panel.vue'
+import Chart_panel from './components/Chart_panel.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     Quotes,
-    Diagram_panel,
+    Chart_panel,
   },
   data: () => ({
-
+    price: [],
+    tradeTime: [''],
+    currencyPairs: [
+      {
+        names: ['usd', 'btc'],
+        lastValue: [],
+        connection: false,
+        lastPanelUpdate: new Date(),
+        lastChartUpdate: new Date(),
+        growth: 0,
+      },
+      {
+        names: ['usd', 'bch'],
+        lastValue: [],
+        connection: false,
+        lastPanelUpdate: new Date(),
+        lastChartUpdate: new Date(),
+        growth: 0,
+      },
+      {
+        names: ['usd', 'eth'],
+        lastValue: [],
+        connection: false,
+        lastPanelUpdate: new Date(),
+        lastChartUpdate: new Date(),
+        growth: 0,
+      },
+      {
+        names: ['usd', 'ltc'],
+        lastValue: [],
+        connection: false,
+        lastPanelUpdate: new Date(),
+        lastChartUpdate: new Date(),
+        growth: 0,
+      },
+    ],
+    selectedPair: '',
+    apiKey: 'b3003fdb202608263f007675fe0a0a923091385e73cbf600d23ebfb29c30328e',
   }),
   methods: {
+    getprice(fCurr, sCurr, lim) {
+      fetch(`https://min-api.cryptocompare.com/data/v2/histominute?fsym=${fCurr}&tsym=${sCurr}&limit=${lim}`)
+        .then(response => response.json())
+        .then(response => {
+          response.Data.Data.forEach((res, ind) => {
+            this.price[ind] = res.close.toFixed(3);
 
+            const date = new Date(res.time * 1000);
+            const hours = date.getHours().toString();
+            let minutes = date.getMinutes().toString();
+            if (minutes.length === 1) {
+              minutes = '0' + minutes;
+            }
+            this.tradeTime.[ind] = hours + ':' + minutes;
+            if (this.tradeTime[0] === '') {
+              this.tradeTime.shift();
+            }
+          })
+        })
+    },
+
+    connectToWebSocket(pair) {
+      const fCurr = pair.names[1]
+      const sCurr = pair.names[0]
+
+      console.log(`Open websocket to get data for ${pair.names.join('|')}`);
+      pair.connection = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + this.apiKey)
+
+      pair.connection.onopen = () => {
+        console.log('Successfully connected')
+        pair.connection.send(JSON.stringify({
+            "action": "SubAdd",
+            "subs": [`0~Coinbase~${fCurr.toUpperCase()}~${sCurr.toUpperCase()}`]
+        }))
+      }
+
+      pair.connection.onmessage = (event) => {
+        const objData = JSON.parse(event.data)
+        const price = objData.P
+        const time = objData.TS;
+
+
+        if (typeof price === 'number') {
+
+          // update panel and chart data after some seconds
+          const secDiff = (new Date().getTime()/100).toFixed() - (pair.lastPanelUpdate.getTime()/100).toFixed()
+          if (secDiff > 10) {
+            console.log('second')
+
+            //update panel data
+            pair.lastValue.push(price)
+            if (pair.lastValue.length > 2) {
+              pair.lastValue.shift();
+            }
+            pair.growth = Math.abs((pair.lastValue[1] * 100 / pair.lastValue[0] - 100).toFixed(2))
+
+            // modify last chart value
+            if (pair.names.join('') === this.selectedPair.join('')) {
+              this.price.pop()
+              this.price.push(price)
+            }
+
+            pair.lastPanelUpdate = new Date();
+          }
+
+          // add data to chart after minute
+          const timeDiff = new Date().getMinutes() - pair.lastChartUpdate.getMinutes()
+          if (pair.names.join('') === this.selectedPair.join('') && timeDiff !== 0) {
+            this.price.shift()
+            this.price.push(price)
+
+            const date = new Date(time * 1000);
+            const hours = date.getHours().toString();
+            let minutes = date.getMinutes().toString();
+            if (minutes.length === 1) {
+              minutes = '0' + minutes;
+            }
+            const formatedTime = hours + ':' + minutes;
+            this.tradeTime.shift();
+            this.tradeTime.push(formatedTime);
+            pair.lastChartUpdate = new Date();
+          }
+        }
+      }
+      pair.connection.onclose = function() {
+        console.log('Closing Web Socket');
+      }
+    },
+
+    closeSockets() {
+      this.currencyPairs.forEach(pair => pair.connection.close())
+    },
+
+    setSelectedPair(pair) {
+      this.selectedPair = pair;
+    },
+  },
+  created() {
+    this.setSelectedPair(this.currencyPairs[0].names)
   },
 }
 </script>
@@ -32,12 +178,20 @@ export default {
   display: grid;
   grid-template-areas:
   "header header"
-  "quotes diagram";
+  "title_panel chart_panel"
+  "currency_bar chart_panel";
   grid-template-columns: $quotes_width 1fr;
-  gap: 10px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   background-color: #000;
   height: 100vh;
+  @include portable() {
+    grid-template-areas:
+    "header"
+    "title_panel"
+    "chart_panel"
+    "currency_bar";
+    grid-template-columns: 1fr;
+  }
   // reset
   * {
     box-sizing: border-box;
@@ -47,6 +201,11 @@ export default {
   h3,
   h4 {
     margin: 0;
+  }
+  .b1 {
+    position: absolute;
+    top: 10px;
+    left: 50px;
   }
 }
 </style>

@@ -1,35 +1,58 @@
 <template lang="html">
-  <div class="quotes">
-    <div class="quotes__title_panel">
-      <h2 class="quotes__title">панель котировок</h2>
+  <div class="title_panel">
+    <h2 class="title_panel__title">панель котировок</h2>
+  </div>
+
+  <div class="currency_bar">
+    <div class="currency_bar__labels">
+      <h3 class="currency_bar__label">Валютные пары</h3>
+      <h3 class="currency_bar__label">Изменения</h3>
+      <h3 class="currency_bar__label">Цена</h3>
     </div>
 
-    <div class="quotes__currency">
-      <div class="quotes__labels">
-        <h3 class="quotes__label">Валютные пары</h3>
-        <h3 class="quotes__label">Изменения</h3>
-        <h3 class="quotes__label">Цена</h3>
-      </div>
-
-      <ul class="quotes__list">
-        <li class="quotes__item">
-          <h2>USD</h2> <h2>%</h2> <h2>price</h2>
-        </li>
-        <li class="quotes__item">
-          <h2>BCH</h2> <h2>%</h2> <h2>price</h2>
-        </li>
-        <li class="quotes__item">
-          <h2>XRP</h2> <h2>%</h2> <h2>price</h2>
-        </li>
-      </ul>
-    </div>
+    <ul class="currency_bar__list">
+      <li
+        class="currency_bar__item"
+        v-for="pair in currencyPairs"
+        :key="pair"
+        v-on:click="selectPairOnClickHandler(pair)"
+      >
+        <span class="currency_bar__pair">{{ pair.names.join(' | ') }}</span>
+        <span class="currency_bar__growth">
+          <img v-if="pair.growth > 0" src="../images/arrow_up.svg" alt="">
+          <img v-else src="../images/arrow_down.svg" alt="">
+          {{ pair.growth }}%
+        </span>
+        <span class="currency_bar__price">{{ pair.lastValue[1] }}</span>
+      </li>
+    </ul>
   </div>
 </template>
 
 
 <script>
 export default {
-  name: 'Quotes'
+  name: 'currency_bar',
+  props: ['price', 'getprice', 'connectToWebSocket', 'currencyPairs', 'setSelectedPair'],
+  methods: {
+    selectPairOnClickHandler(cur) {
+      this.getprice(cur.names[1], cur.names[0], 180)
+      this.setSelectedPair(cur.names);
+    },
+    alive() {
+      console.log('I`am alive')
+    }
+  },
+  created() {
+    this.getprice(
+      this.currencyPairs[0].names[1],
+      this.currencyPairs[0].names[0],
+      180
+    )
+    this.currencyPairs.forEach(pair => {
+      this.connectToWebSocket(pair)
+    })
+  },
 }
 </script>
 
@@ -37,47 +60,81 @@ export default {
 <style lang="scss" scoped>
   @import '../styles/mixins';
   @import '../styles/variables';
-  .quotes {
-    grid-area: quotes;
-    width: $quotes_width;
-    height: $main_heigth;
-    &__title_panel {
-      display: flex;
-      align-items: center;
-      height: 7.5vh;
-      background-color: $main_dark_gray;
-      margin-bottom: 3px;
+  .title_panel {
+    grid-area: title_panel;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3px;
+
+    height: $title_panel_height;
+
+    background-color: $main_dark_gray;
+    @include portable() {
+      margin-bottom: 2px;
+
+      height: $title_panel_height_portable;
     }
     &__title {
       @include h1;
-      padding-left: 35px;
+      width: 90%;
+
       color: #fff;
+      white-space: nowrap;
+      @include portable() {
+        font-size: 14px;
+      }
     }
-    &__currency {
-      padding: 0 40px 0 35px;
-      height: calc(#{$main_heigth} - 3px - 7.5vh);
-      background-color: $main_dark_gray;
+  }
+  .currency_bar {
+    grid-area: currency_bar;
+    height: $currency_bar_height;
+    background-color: $main_dark_gray;
+    @include portable() {
+      height: $currency_bar_height_portable;
     }
     &__labels {
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 33%);
       padding-top: 20px;
       padding-bottom: 5px;
-      display: flex;
-      justify-content: space-between;
+      width: 90%;
     }
     &__label {
       @include h2;
       font-size: 12px;
       color: $main_light_grey;
+      white-space: nowrap;
+    }
+    &__label:nth-child(2) {
+      padding-left: 30px;
+    }
+    &__label:nth-child(3) {
+      justify-self: end;
     }
     &__list {
+      margin: auto;
+      margin-top: 5px;
+      padding: 0;
+      width: 90%;
     }
     &__item {
       @include h3;
-      display: flex;
-      justify-content: space-between;
-      margin-left: -40px;
+      display: grid;
+      grid-template-columns: repeat(3, 33%);
       font-size: 20px;
       color: #fff;
+      white-space: nowrap;
+    }
+    &__pair {
+
+    }
+    &__growth {
+      padding-left: 30px;
+    }
+    &__price {
+      justify-self: end;
     }
   }
 </style>

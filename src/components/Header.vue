@@ -18,12 +18,22 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 8px;
+
     height: $header_height;
+
     background-color: $main_dark_gray;
+    @include portable() {
+      margin-bottom: 1px;
+
+      height: $header_heigth_portable;
+    }
     &__title {
       @include h1;
       position: relative;
+
       height: 1em;
+
       line-height: 1em;
       background: $gradient_1;
       -webkit-background-clip: text;
@@ -32,8 +42,10 @@ export default {
         content: " ";
         position: absolute;
         bottom: 2.5px;
+
         width: 100%;
         height: 1px;
+
         background: $gradient_1;
       }
       &::after {
@@ -41,8 +53,10 @@ export default {
         position: absolute;
         bottom: 2.5px;
         left: 23px;
+
         width: 7.5px;
         height: 1px;
+
         background-color: $main_dark_gray;
       }
     }
