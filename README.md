@@ -9,8 +9,8 @@
 Vue 3, WebSolckets(Socket.IO), SCSS, fetch, RestAPI, BEM
 
 ### Features
-<li>Real-time updates of Exchanges Rates<li/>
-<li>Adaptive design<li/>
-<li>Show vector of price changes<li/>
-<li>Optimizations based on time calculations<li/>
-<li>Progressive design<li/>
+<li>Real-time updates of Exchanges Rates
+<li>Adaptive design
+<li>Show vector of price changes
+<li>Optimizations based on time calculations
+<li>Progressive design
