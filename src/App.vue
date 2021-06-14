@@ -34,7 +34,6 @@ export default {
       {
         names: ['usd', 'btc'],
         lastValue: [],
-        connection: false,
         lastPanelUpdate: new Date(),
         lastChartUpdate: new Date(),
         growth: 0,
@@ -42,7 +41,6 @@ export default {
       {
         names: ['usd', 'bch'],
         lastValue: [],
-        connection: false,
         lastPanelUpdate: new Date(),
         lastChartUpdate: new Date(),
         growth: 0,
@@ -50,7 +48,6 @@ export default {
       {
         names: ['usd', 'eth'],
         lastValue: [],
-        connection: false,
         lastPanelUpdate: new Date(),
         lastChartUpdate: new Date(),
         growth: 0,
@@ -58,7 +55,6 @@ export default {
       {
         names: ['usd', 'ltc'],
         lastValue: [],
-        connection: false,
         lastPanelUpdate: new Date(),
         lastChartUpdate: new Date(),
         growth: 0,
@@ -93,7 +89,6 @@ export default {
       const subsList = this.currencyPairs.map(pair => {
         return `0~Coinbase~${pair.names[1].toUpperCase()}~${pair.names[0].toUpperCase()}`
       })
-      console.log(subsList)
 
       console.log(`Open websocket`);
       this.connection = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + this.apiKey)
@@ -110,8 +105,6 @@ export default {
         const objData = JSON.parse(event.data)
         const price = objData.P
         const time = objData.TS;
-        console.log(`${objData.FSYM} ${objData.P}`)
-        console.log(objData)
 
         if (typeof price === 'number') {
 
