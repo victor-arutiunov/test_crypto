@@ -6,7 +6,7 @@
 [Task](https://docs.google.com/document/d/1kg9E1rkCAbqJtKUA2hDKkFt7GEPozwiAuSc4OnldqfU/edit?ts=607d964d#heading=h.nl9c3anzn37)
 
 ### Technologies stack
-Vue 3, WebSolckets(Socket.IO), SCSS, fetch, RestAPI, BEM
+Vue 3, WebSockets(Socket.IO), SCSS, fetch, RestAPI, BEM
 
 ### Features
 <li>Real-time updates of Exchanges Rates
