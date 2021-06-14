@@ -1,4 +1,3 @@
-# test_crypto
 [App on GitHub Pages](https://victor-arutiunov.github.io/test_crypto/)
 
 ## Page design and Technical task
