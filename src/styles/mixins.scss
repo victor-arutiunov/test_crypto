@@ -1,11 +1,11 @@
 // resolutions
 @mixin desktop() {
-  @media (max-width: 1080px) {
+  @media (max-width: 1920px) {
     @content;
   }
 }
 @mixin portable() {
-  @media (max-width: 640px) {
+  @media (max-width: 1200px) {
     @content;
   }
 }

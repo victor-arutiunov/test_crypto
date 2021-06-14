@@ -91,9 +91,9 @@ export default {
       margin: auto;
       display: grid;
       grid-template-columns: repeat(3, 33%);
-      padding-top: 20px;
+      padding: 20px 40px 8px 35px;
       padding-bottom: 5px;
-      width: 90%;
+      width: 100%;
     }
     &__label {
       @include h2;
@@ -111,18 +111,21 @@ export default {
       margin: auto;
       margin-top: 5px;
       padding: 0;
-      width: 90%;
+      width: 100%;
     }
     &__item {
       @include h3;
       display: grid;
       grid-template-columns: repeat(3, 33%);
+      padding: 8px 40px 8px 35px;
+
       font-size: 20px;
       color: #fff;
       white-space: nowrap;
-    }
-    &__pair {
-
+      cursor: pointer;
+      &:hover {
+        background: $gradient_2;
+      }
     }
     &__growth {
       padding-left: 30px;
