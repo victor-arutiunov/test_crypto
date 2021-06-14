@@ -33,7 +33,14 @@
 <script>
 export default {
   name: 'currency_bar',
-  props: ['price', 'getprice', 'connectToWebSocket', 'currencyPairs', 'setSelectedPair'],
+  props: [
+  'price',
+  'getprice',
+  'connectToWebSocket',
+  'currencyPairs',
+  'setSelectedPair',
+  'setStartValues',
+  ],
   methods: {
     selectPairOnClickHandler(cur) {
       this.getprice(cur.names[1], cur.names[0], 180)
@@ -48,8 +55,11 @@ export default {
       this.currencyPairs[0].names[1],
       this.currencyPairs[0].names[0],
       180
-    )
-    this.connectToWebSocket()
+    );
+    this.connectToWebSocket();
+    this.currencyPairs.forEach(pair => {
+      this.setStartValues(pair.names[1], pair.names[0], 2, pair)
+    });
   },
 }
 </script>

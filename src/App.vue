@@ -6,6 +6,7 @@
     :connectToWebSocket="connectToWebSocket"
     :currencyPairs="currencyPairs"
     :setSelectedPair="setSelectedPair"
+    :setStartValues="setStartValues"
     />
   <Chart_panel
     :price="price"
@@ -81,6 +82,16 @@ export default {
             if (this.tradeTime[0] === '') {
               this.tradeTime.shift();
             }
+          })
+        })
+    },
+
+    setStartValues(fCurr, sCurr, lim, pair) {
+      fetch(`https://min-api.cryptocompare.com/data/v2/histominute?fsym=${fCurr}&tsym=${sCurr}&limit=${lim}`)
+        .then(response => response.json())
+        .then(response => {
+          response.Data.Data.forEach((res, ind) => {
+            pair.lastValue[ind] = res.close.toFixed(3);
           })
         })
     },
