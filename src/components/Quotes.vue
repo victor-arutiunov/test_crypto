@@ -49,9 +49,7 @@ export default {
       this.currencyPairs[0].names[0],
       180
     )
-    this.currencyPairs.forEach(pair => {
-      this.connectToWebSocket(pair)
-    })
+    this.connectToWebSocket()
   },
 }
 </script>
@@ -63,13 +61,10 @@ export default {
   .title_panel {
     grid-area: title_panel;
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-bottom: 3px;
-
     height: $title_panel_height;
-
     background-color: $main_dark_gray;
+    margin-bottom: 3px;
     @include portable() {
       margin-bottom: 2px;
 
@@ -77,8 +72,7 @@ export default {
     }
     &__title {
       @include h1;
-      width: 90%;
-
+      padding-left: 35px;
       color: #fff;
       white-space: nowrap;
       @include portable() {

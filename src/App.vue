@@ -12,7 +12,6 @@
     :tradeTime="tradeTime"
     :selectedPair="selectedPair"
     />
-  <!-- <button class="b1" v-on:click="closeSockets()">Close websockets!!!</button> -->
 </template>
 
 <script>
@@ -30,6 +29,7 @@ export default {
   data: () => ({
     price: [],
     tradeTime: [''],
+    connection: false,
     currencyPairs: [
       {
         names: ['usd', 'btc'],
@@ -89,33 +89,39 @@ export default {
         })
     },
 
-    connectToWebSocket(pair) {
-      const fCurr = pair.names[1]
-      const sCurr = pair.names[0]
+    connectToWebSocket() {
+      const subsList = this.currencyPairs.map(pair => {
+        return `0~Coinbase~${pair.names[1].toUpperCase()}~${pair.names[0].toUpperCase()}`
+      })
+      console.log(subsList)
 
-      console.log(`Open websocket to get data for ${pair.names.join('|')}`);
-      pair.connection = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + this.apiKey)
+      console.log(`Open websocket`);
+      this.connection = new WebSocket('wss://streamer.cryptocompare.com/v2?api_key=' + this.apiKey)
 
-      pair.connection.onopen = () => {
+      this.connection.onopen = () => {
         console.log('Successfully connected')
-        pair.connection.send(JSON.stringify({
+        this.connection.send(JSON.stringify({
             "action": "SubAdd",
-            "subs": [`0~Coinbase~${fCurr.toUpperCase()}~${sCurr.toUpperCase()}`]
+            "subs": subsList,
         }))
       }
 
-      pair.connection.onmessage = (event) => {
+      this.connection.onmessage = (event) => {
         const objData = JSON.parse(event.data)
         const price = objData.P
         const time = objData.TS;
-
+        console.log(`${objData.FSYM} ${objData.P}`)
+        console.log(objData)
 
         if (typeof price === 'number') {
+
+          const pair = this.currencyPairs.find(pair =>
+            pair.names.join('') === (objData.TSYM + objData.FSYM).toLowerCase()
+          )
 
           // update panel and chart data after some seconds
           const secDiff = (new Date().getTime()/100).toFixed() - (pair.lastPanelUpdate.getTime()/100).toFixed()
           if (secDiff > 10) {
-            console.log('second')
 
             //update panel data
             pair.lastValue.push(price)
@@ -152,8 +158,8 @@ export default {
           }
         }
       }
-      pair.connection.onclose = function() {
-        console.log('Closing Web Socket');
+      this.connection.onclose = function(event) {
+        console.log(`Closing Web Socket, reason: ${event.reason}`);
       }
     },
 

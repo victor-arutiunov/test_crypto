@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 // colors
 $main_dark_gray: #191A20;
 $main_light_grey: #757679;
@@ -8,7 +10,7 @@ $gradient_2: linear-gradient(90deg, rgba(31, 70, 106, 0.88) 0%, #191A20 138.3%),
 
 
 @function calculateHeight($element, $monitor_height) {
-  @return $element * 100 / $monitor_height;
+  @return math.div($element * 100 , $monitor_height);
 }
 
 
